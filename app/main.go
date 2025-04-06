@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -77,5 +79,23 @@ func initDB() {
 	if err != nil {
 		SecureLog(err)
 		panic("failed to migrate database")
+	}
+}
+
+func main() {
+	initDB()
+
+	r := mux.NewRouter()
+	r.HandleFunc("/upload", UploadHandler).Methods("POST")
+	r.HandleFunc("/audiobooks", ListAudiobooksHandler).Methods("GET")
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("Server started on port %s", port)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		SecureLog(err)
 	}
 }

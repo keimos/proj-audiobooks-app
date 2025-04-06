@@ -48,3 +48,16 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(audiobook)
 }
+
+// ListAudiobooksHandler lists all uploaded audiobooks
+func ListAudiobooksHandler(w http.ResponseWriter, r *http.Request) {
+	var audiobooks []Audiobook
+	if err := db.Find(&audiobooks).Error; err != nil {
+		SecureLog(err)
+		http.Error(w, "Failed to list audiobooks", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(audiobooks)
+}

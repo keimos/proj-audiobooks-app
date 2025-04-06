@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // Audiobook represents data for audiobook
@@ -60,4 +63,19 @@ func ListAudiobooksHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(audiobooks)
+}
+
+func initDB() {
+	var err error
+	db, err = gorm.Open(sqlite.Open("audiobooks.db"), &gorm.Config{})
+	if err != nil {
+		SecureLog(err)
+		panic("failed to connect database")
+	}
+
+	err = db.AutoMigrate(&Audiobook{})
+	if err != nil {
+		SecureLog(err)
+		panic("failed to migrate database")
+	}
 }

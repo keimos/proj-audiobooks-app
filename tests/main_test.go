@@ -5,7 +5,11 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB
 
 func TestMain(m *testing.M) {
 	os.Remove(("test.db"))

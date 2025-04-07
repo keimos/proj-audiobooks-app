@@ -85,9 +85,9 @@ func initDB() {
 func main() {
 	initDB()
 
-	r := mux.NewRouter()
-	r.HandleFunc("/upload", UploadHandler).Methods("POST")
-	r.HandleFunc("/audiobooks", ListAudiobooksHandler).Methods("GET")
+	router := mux.NewRouter()
+	router.HandleFunc("/upload", UploadHandler).Methods("POST")
+	router.HandleFunc("/audiobooks", ListAudiobooksHandler).Methods("GET")
 
 	port := os.Getenv("PORT")
 	if port == "" {
